@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('Pull Code From GitHub') {
+            steps {
+                git 'https://github.com/jeevithajack/newk8s.git'
+            }
+        }
+        stage('Build the Docker image') {
+            steps {
+                sh 'sudo docker build -t k8simage /var/lib/jenkins/workspace/kuber'
+                sh 'sudo docker tag k8simage jagajeevi1122/k8simage:latest'
+                sh 'sudo docker tag k8simage jagajeevi1122/k8simage:${BUILD_NUMBER}'
+            }
+        }
+        stage('Push the Docker image') {
+            steps {
+                sh 'sudo docker image push jagajeevi1122/k8simage:latest'
+                sh 'sudo docker image push jagajeevi1122/k8simage:${BUILD_NUMBER}'
+            }
+        }
+        
+    }
+}
+
